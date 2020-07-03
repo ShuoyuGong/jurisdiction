@@ -7,6 +7,7 @@ use App\models\Permission;
 use App\models\Role;
 use Illuminate\Http\Request;
 
+
 class IndexController extends Controller
 {
   /*
@@ -101,6 +102,192 @@ class IndexController extends Controller
 
   public function html()
   {
-    return view('index');
+    // $data = array(
+    //   'iccids' => array(
+    //     0 => '89860619140058594308',
+    //     1 => '89860619140059011757',
+    //     2 => '89860619140059011765',
+    //     3 => '89860619140059011781',
+    //     4 => '89860619140059011849',
+    //   )
+    // );
+    // $data = http_build_query($data);
+    // $opts = array('http' => array('method' => 'POST', 'header' => 'Content-type: application/x-www-form-urlencodedrn' . 'Content-Length: ' . strlen($data) . '\r\n', 'content' => $data));
+    // $context = stream_context_create($opts);
+    // $html = file_get_contents('http://npt.henancrsm.com/cards_info', false, $context);
+    // dd($html);
+    // return view('index');
+
+
+
+    // $post_data = array(
+    //   'iccid' => '89860619140058594308',
+    //   '_token' => csrf_token(),
+    // );
+    // $data = $this->send_post('http://npt.henancrsm.com/card_info', $post_data);
+    // dd($data);
+
+
+    // $data = array(
+    //   'iccid' => '89860619140058594308',
+    // );
+    // $data = http_build_query($data);
+    // $opts = array('http' => array('method' => 'GET', 'header' => 'Content-type: application/x-www-form-urlencodedrn' . 'Content-Length: ' . strlen($data) . '\r\n', 'content' => $data));
+    // $context = stream_context_create($opts);
+    // $html = file_get_contents('http://npt.henancrsm.com/card_info', false, $context);
+    // echo $html;
+
+
+
+    $http = new \GuzzleHttp\Client();
+    $response = $http->request('POST', 'http://npt.henancrsm.com/card_info', [
+      'form_params' => [
+        'iccids' => array(
+          0 => '89860619140058594308',
+          1 => '89860619140059011757',
+          2 => '89860619140059011765',
+          3 => '89860619140059011781',
+          4 => '89860619140059011849',
+        ),
+      ]
+      // 'form_params' => [
+      //   'iccid' => '89860619140058594308',
+      // ]
+    ]);
+    // $response = $client->request('GET', 'http://npt.henancrsm.com/card_info/89860619140058594308');
+    if ((int) $response->getStatusCode() === 200) {
+      $res = json_decode($response->getBody());
+      dd($res);
+    } else {
+      dd('faild');
+    }
+  }
+
+
+  // 获取卡详情 单卡
+  public function get_card_info()
+  {
+    $iccid = '89860619140058594308';
+    $http = new \GuzzleHttp\Client();
+    $response = $http->request('POST', 'http://npt.henancrsm.com/card_info', [
+      'form_params' => [
+        'iccid' => $iccid,
+      ]
+    ]);
+
+    // $response = $client->request('GET', 'http://npt.henancrsm.com/card_info/89860619140058594308');
+    if ((int) $response->getStatusCode() === 200) {
+      $res = json_decode($response->getBody());
+      dd($res);
+    } else {
+      dd('faild');
+    }
+  }
+
+
+  // 获取卡详情 多卡
+  public function get_cards_info()
+  {
+    $iccids = array(
+      0 => '89860619140058594308',
+      1 => '89860619140059011757',
+      2 => '89860619140059011765',
+      3 => '89860619140059011781',
+      4 => '89860619140059011849',
+    );
+    $http = new \GuzzleHttp\Client();
+    $response = $http->request('POST', 'http://npt.henancrsm.com/card_info', [
+      'form_params' => [
+        'iccids' => $iccids,
+      ]
+    ]);
+    if ((int) $response->getStatusCode() === 200) {
+      $res = json_decode($response->getBody());
+      if ($res->message == '成功' && $res->status == '0000') {
+        dd($res->data);
+      }
+    } else {
+      dd('faild');
+    }
+  }
+
+  // 停卡 单卡
+  public function stop_card()
+  {
+    $iccid = '89860619140059011823';
+    $http = new \GuzzleHttp\Client();
+    $response = $http->request('POST', 'http://npt.henancrsm.com/card_stop', [
+      'form_params' => [
+        'iccid' => $iccid,
+      ]
+    ]);
+
+    if ((int) $response->getStatusCode() === 200) {
+      $res = json_decode($response->getBody());
+      dd($res);
+    } else {
+      dd('faild');
+    }
+  }
+
+  // 停卡 多卡
+  public function stop_cards()
+  {
+    $iccids = array(
+      0 => '89860619140059011823',
+      1 => '89860619190033586473',
+    );
+    $http = new \GuzzleHttp\Client();
+    $response = $http->request('POST', 'http://npt.henancrsm.com/card_stop', [
+      'form_params' => [
+        'iccids' => $iccids,
+      ]
+    ]);
+    // $response = $client->request('GET', 'http://npt.henancrsm.com/card_info/89860619140058594308');
+    if ((int) $response->getStatusCode() === 200) {
+      $res = json_decode($response->getBody());
+      dd($res);
+    } else {
+      dd('faild');
+    }
+  }
+
+  public function open_card()
+  {
+    $iccid = '89860619140059011823';
+    $http = new \GuzzleHttp\Client();
+    $response = $http->request('POST', 'http://npt.henancrsm.com/card_begin', [
+      'form_params' => [
+        'iccid' => $iccid,
+      ]
+    ]);
+
+    if ((int) $response->getStatusCode() === 200) {
+      $res = json_decode($response->getBody());
+      dd($res);
+    } else {
+      dd('faild');
+    }
+  }
+
+  public function open_cards()
+  {
+    $iccids = array(
+      0 => '89860619140059011823',
+      1 => '89860619190033586473',
+    );
+    $http = new \GuzzleHttp\Client();
+    $response = $http->request('POST', 'http://npt.henancrsm.com/card_begin', [
+      'form_params' => [
+        'iccids' => $iccids,
+      ]
+    ]);
+
+    if ((int) $response->getStatusCode() === 200) {
+      $res = json_decode($response->getBody());
+      dd($res);
+    } else {
+      dd('faild');
+    }
   }
 }

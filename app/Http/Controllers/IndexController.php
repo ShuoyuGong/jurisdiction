@@ -102,20 +102,20 @@ class IndexController extends Controller
 
   public function html()
   {
-    // $data = array(
-    //   'iccids' => array(
-    //     0 => '89860619140058594308',
-    //     1 => '89860619140059011757',
-    //     2 => '89860619140059011765',
-    //     3 => '89860619140059011781',
-    //     4 => '89860619140059011849',
-    //   )
-    // );
-    // $data = http_build_query($data);
-    // $opts = array('http' => array('method' => 'POST', 'header' => 'Content-type: application/x-www-form-urlencodedrn' . 'Content-Length: ' . strlen($data) . '\r\n', 'content' => $data));
-    // $context = stream_context_create($opts);
-    // $html = file_get_contents('http://npt.henancrsm.com/cards_info', false, $context);
-    // dd($html);
+    $data = array(
+      'iccids' => array(
+        0 => '89860619140058594308',
+        1 => '89860619140059011757',
+        2 => '89860619140059011765',
+        3 => '89860619140059011781',
+        4 => '89860619140059011849',
+      )
+    );
+    $data = http_build_query($data);
+    $opts = array('http' => array('method' => 'POST', 'header' => 'Content-type: application/x-www-form-urlencodedrn' . 'Content-Length: ' . strlen($data) . '\r\n', 'content' => $data));
+    $context = stream_context_create($opts);
+    $html = file_get_contents('http://npt.henancrsm.com/cards_info', false, $context);
+    dd($html);
     // return view('index');
 
 
@@ -127,9 +127,8 @@ class IndexController extends Controller
     // $data = $this->send_post('http://npt.henancrsm.com/card_info', $post_data);
     // dd($data);
 
-
     // $data = array(
-    //   'iccid' => '89860619140058594308',
+    //   'verification' => md5(env('APP_ID') . env('SECRET_KEY')),
     // );
     // $data = http_build_query($data);
     // $opts = array('http' => array('method' => 'GET', 'header' => 'Content-type: application/x-www-form-urlencodedrn' . 'Content-Length: ' . strlen($data) . '\r\n', 'content' => $data));
@@ -139,28 +138,28 @@ class IndexController extends Controller
 
 
 
-    $http = new \GuzzleHttp\Client();
-    $response = $http->request('POST', 'http://npt.henancrsm.com/card_info', [
-      'form_params' => [
-        'iccids' => array(
-          0 => '89860619140058594308',
-          1 => '89860619140059011757',
-          2 => '89860619140059011765',
-          3 => '89860619140059011781',
-          4 => '89860619140059011849',
-        ),
-      ]
-      // 'form_params' => [
-      //   'iccid' => '89860619140058594308',
-      // ]
-    ]);
-    // $response = $client->request('GET', 'http://npt.henancrsm.com/card_info/89860619140058594308');
-    if ((int) $response->getStatusCode() === 200) {
-      $res = json_decode($response->getBody());
-      dd($res);
-    } else {
-      dd('faild');
-    }
+    // $http = new \GuzzleHttp\Client();
+    // $response = $http->request('POST', 'http://npt.henancrsm.com/card_info', [
+    //   'form_params' => [
+    //     'iccids' => array(
+    //       0 => '89860619140058594308',
+    //       1 => '89860619140059011757',
+    //       2 => '89860619140059011765',
+    //       3 => '89860619140059011781',
+    //       4 => '89860619140059011849',
+    //     ),
+    //   ]
+    //   // 'form_params' => [
+    //   //   'iccid' => '89860619140058594308',
+    //   // ]
+    // ]);
+    // // $response = $client->request('GET', 'http://npt.henancrsm.com/card_info/89860619140058594308');
+    // if ((int) $response->getStatusCode() === 200) {
+    //   $res = json_decode($response->getBody());
+    //   dd($res);
+    // } else {
+    //   dd('faild');
+    // }
   }
 
 
@@ -174,8 +173,6 @@ class IndexController extends Controller
         'iccid' => $iccid,
       ]
     ]);
-
-    // $response = $client->request('GET', 'http://npt.henancrsm.com/card_info/89860619140058594308');
     if ((int) $response->getStatusCode() === 200) {
       $res = json_decode($response->getBody());
       dd($res);
@@ -199,10 +196,12 @@ class IndexController extends Controller
     $response = $http->request('POST', 'http://npt.henancrsm.com/card_info', [
       'form_params' => [
         'iccids' => $iccids,
+        'verification' => md5(env('APP_ID') . env('SECRET_KEY')),
       ]
     ]);
     if ((int) $response->getStatusCode() === 200) {
       $res = json_decode($response->getBody());
+      dd($res);
       if ($res->message == '成功' && $res->status == '0000') {
         dd($res->data);
       }

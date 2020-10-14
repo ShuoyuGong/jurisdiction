@@ -19,7 +19,6 @@ class IndexController extends Controller
     $admin = new Role;
     $admin->name = 'Administartor';
     $admin->save();
-
     $owner = new Role;
     $owner->name = 'admin';
     $owner->save();
